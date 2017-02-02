@@ -11,8 +11,127 @@ struct points {
 	int x;
 	int y;	
 };
+void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
+{
+        int ele_num_l = med_idx - left_idx + 1;
+        int ele_num_r = right_idx - med_idx;
+        int temp_l[ele_num_l];
+        int temp_r[ele_num_r];
 
-int handleBasecase(struct point *input,int n)
+        for(int i = 0; i < ele_num_l; i++)
+        {
+                temp_l[i] = input[left_idx + i].x;
+        }
+
+        for(int j = 0; j < ele_num_r; j++)
+        {
+                temp_r[j] = input[med_idx+ 1 + j].x;
+        }
+        int i = 0;
+        int j = 0;
+        int k = left_idx;
+        while(i < ele_num_l && j < ele_num_r)
+        {
+                if(temp_l[i] <= temp_r[j])
+                {
+                        input[k].x = temp_l[i];
+                        i++;
+                }
+                else
+                {
+                        input[k].x = temp_r[j];
+                        j++;
+                }
+                k++;
+        }
+        while(i < ele_num_l)
+        {
+                input[k].x = temp_l[i];
+                i++;
+                k++;
+        }
+        while(j < ele_num_r)
+        {
+                input[k].x = temp_r[j];
+		j++;
+                k++;
+        }
+}
+
+void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
+{
+        int ele_num_l = med_idx - left_idx + 1;
+        int ele_num_r = right_idx - med_idx;
+        int temp_l[ele_num_l];
+        int temp_r[ele_num_r];
+
+        for(int i = 0; i < ele_num_l; i++)
+        {
+                temp_l[i] = input[left_idx + i].y;
+        }
+
+        for(int j = 0; j < ele_num_r; j++)
+        {
+                temp_r[j] = input[med_idx+ 1 + j].y;
+        }
+        int i = 0;
+        int j = 0;
+        int k = left_idx;
+	while(i < ele_num_l && j < ele_num_r)
+        {
+                if(temp_l[i] <= temp_r[j])
+                {
+                        input[k].y = temp_l[i];
+                        i++;
+                }
+                else
+                {
+                        input[k].y = temp_r[j];
+                        j++;
+                }
+                k++;
+        }
+        while(i < ele_num_l)
+        {
+                input[k].y = temp_l[i];
+                i++;
+                k++;
+        }
+        while(j < ele_num_r)
+        {
+                input[k].y = temp_r[j];
+                j++;
+                k++;
+        }
+}
+
+
+void mergeSortX(struct points *input,int left_idx, int right_idx)
+{
+        if(left_idx < right_idx)
+        {
+                int med_idx = (left_idx + right_idx)/2;
+
+                mergeSortX(input, left_idx, med_idx);//for the first half of the inputay
+                mergeSortX(input,med_idx + 1, right_idx);//for the second
+
+                mergeX(input, left_idx, med_idx, right_idx);//merge them together
+        }
+}
+
+void mergeSortY(struct points *input,int left_idx, int right_idx)
+{
+        if(left_idx < right_idx)
+        {
+                int med_idx = (left_idx + right_idx)/2;
+
+                mergeSortY(input, left_idx, med_idx);//for the first half of the inputay
+                mergeSortY(input,med_idx + 1, right_idx);//for the second
+                mergeY(input, left_idx, med_idx, right_idx);//merge them together
+        }
+}
+
+int handleBasecase(struct points *input,int n)
 {
 	int temp;
         if(n == 3)
@@ -134,10 +253,9 @@ int main (int argc, const char * argv[])
 
 
 	/* SORT HERE  */
-	mergeSortX(X_x,0,lineCount);
-	mergeSortY(X_y,0,lineCount);
+	mergeSortX(X_x, 0 ,lineCount);
+	mergeSortY(X_y, 0 ,lineCount);
 	string min = closestPair(X_x,X_y,lineCount);
 
 	return 0;
 }
-
