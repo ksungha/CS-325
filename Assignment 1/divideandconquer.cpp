@@ -40,7 +40,8 @@ int closestPair(struct points *input,int n)
 		int L = n/2;
 		struct points *left = (struct points *) calloc(L,sizeof(struct points));
 		struct points *right = (struct points *) calloc(L,sizeof(struct points));
-		int j,z = 0;
+		int j = 0;
+		int z = 0;
 		int lPointCount = 0;
 		for(i = 0; i < n; i++)
 		{
