@@ -28,10 +28,6 @@ int handleBasecase(struct point *input,int n)
         }	
 }
 
-int closestCrossPair(struct points *input,int curMin)
-{
-}
-
 int closestPair(struct points *input,int n)
 {
 	int i;
