@@ -134,8 +134,8 @@ int main (int argc, const char * argv[])
 
 
 	/* SORT HERE  */
-	mergeSortX(X_x,lineCount);
-	mergeSortY(X_y,lineCount);
+	mergeSortX(X_x,0,lineCount);
+	mergeSortY(X_y,0,lineCount);
 	string min = closestPair(X_x,X_y,lineCount);
 
 	return 0;
