@@ -23,7 +23,7 @@ int handleBasecase(struct point *input,int n)
         }
         else
         {
-                temp = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2))));
+                temp = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
            	return temp;
         }	
 }
