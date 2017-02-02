@@ -23,7 +23,7 @@ int handleBasecase(struct point *input,int n)
         }
         else
         {
-                temp = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2))));
+                temp = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
            	return temp;
         }	
 }
@@ -38,12 +38,44 @@ int closestPair(struct points *input,int n)
 	else
 	{
 		int L = n/2;
-		int min1 = closestPair(input,L);
-		int min2 = closestPair(input,L);
+		struct points *left = (struct points *) calloc(L,sizeof(struct points));
+		struct points *right = (struct points *) calloc(L,sizeof(struct points));
+		int j = 0;
+		int z = 0;
+		int lPointCount = 0;
+		for(i = 0; i < n; i++)
+		{
+			if(input[i].x < L)
+			{
+				left[j].x = input[n].x;
+				left[j].y = input[n].y;
+			}
+			else if(input[i].x > L)
+			{
+				right[j].x = input[n].x;
+                                right[j].y = input[n].y;
+			}
+			else
+			{
+				lPointCount++;
+			}
+		}
+		int min1 = closestPair(left,L);
+		int min2 = closestPair(right,L);
 		int min = min(min1,min2);
-		//identify all points within min distance from L
-		mergeSortY(input,n);
-		int finalMin = closestCrossPair(input,min);
+		struct points *mid = (struct points *) calloc(lPointCount,sizeof(struct points));
+		j=0;
+		for(i = 0;i<n; i++)
+		{
+			if(input[i].x == L)
+			{
+				mid[j].x = input[i].x;
+				mid[j].y = input[i].y;
+				j++;
+			}
+		}
+		mergeSortY(mid,n);
+		int finalMin = closestCrossPair(mid,min);
 		return finalMin;
 	}
 }
@@ -79,6 +111,7 @@ int main (int argc, const char * argv[])
 
 
 	/* SORT HERE  */
+	mergeSortX(input,lineCount);
 	string min = closestPair(input,lineCount);
 
 
