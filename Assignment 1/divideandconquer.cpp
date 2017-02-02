@@ -12,6 +12,46 @@ struct points {
 	int y;	
 };
 
+int handleBasecase(struct point *input,int n)
+{
+	int temp;
+        if(n == 3)
+        {
+               	int temp2 = min(sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2))), sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2))));
+                temp = min(temp2,sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)))); //min vs p1-p2
+                return temp;
+        }
+        else
+        {
+                temp = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2))));
+           	return temp;
+        }	
+}
+
+int closestCrossPair(struct points *input,int curMin)
+{
+}
+
+int closestPair(struct points *input,int n)
+{
+	int i;
+	if(n <= 3)
+	{
+		return handleBasecase(input,n);
+	}
+	else
+	{
+		int L = n/2;
+		int min1 = closestPair(input,L);
+		int min2 = closestPair(input,L);
+		int min = min(min1,min2);
+		//identify all points within min distance from L
+		mergeSortY(input,n);
+		int finalMin = closestCrossPair(input,min);
+		return finalMin;
+	}
+}
+
 int main (int argc, const char * argv[])
 {
 	int lineCount = 0;
@@ -43,9 +83,9 @@ int main (int argc, const char * argv[])
 
 
 	/* SORT HERE  */
-
-
+	string min = closestPair(input,lineCount);
 
 
 	return 0;
 }
+
