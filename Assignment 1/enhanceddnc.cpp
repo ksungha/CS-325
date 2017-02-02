@@ -5,12 +5,14 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <math.h>
 using namespace std;
 
 struct points {
 	int x;
 	int y;	
 };
+
 void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
 {
         int ele_num_l = med_idx - left_idx + 1;
@@ -136,8 +138,11 @@ int handleBasecase(struct points *input,int n)
 	int temp;
         if(n == 3)
         {
-               	int temp2 = min(sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2))), sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2))));
-                temp = min(temp2,sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)))); //min vs p1-p2
+		int d2 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2)));
+		int d3 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2)));
+               	int temp2 = min(d2, d3);
+		int d1 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
+                temp = min(temp2,d1); //min vs p1-p2
                 return temp;
         }
         else
@@ -192,10 +197,10 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 		}
 		int min1 = closestPair(Q_x,Q_y,L);
 		int min2 = closestPair(R_x,R_y,L);
-		int min = min(min1,min2);
+		int minTotal = min(min1,min2);
 		j=0;
-		int lowerBound = L - min;
-		int upperBound = L + min;
+		int lowerBound = L - minTotal;
+		int upperBound = L + minTotal;
 		for(i = 0; i < n; i++)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
@@ -208,12 +213,12 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
 			{
-				M[j].x = input[i].x;
-				M[j].y = input[i].y;
+				M[j].x = X_y[i].x;
+				M[j].y = X_y[i].y;
 				j++;
 			}
 		}
-		int finalMin = closestCrossPair(M,min,lPointCount);
+		int finalMin = closestCrossPair(M,minTotal,lPointCount);
 		return finalMin;
 	}
 }
@@ -255,7 +260,7 @@ int main (int argc, const char * argv[])
 	/* SORT HERE  */
 	mergeSortX(X_x, 0 ,lineCount);
 	mergeSortY(X_y, 0 ,lineCount);
-	string min = closestPair(X_x,X_y,lineCount);
-
+	int min = closestPair(X_x,X_y,lineCount);
+	cout << "minimum distance found: " << min << "\n";
 	return 0;
 }
