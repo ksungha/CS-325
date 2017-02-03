@@ -200,14 +200,12 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 		int lPointCount = 0;
 		for(i = 0; i < n; i++)
 		{
-			//if(X_x[i].x <= L)
 			if(i < L)
 			{
 				Q_x[j].x = X_x[i].x;
 				Q_x[j].y = X_x[i].y;
 				j++;
 			}
-		//	else
 			else if(i >= L)
 			{
 				R_x[z].x = X_x[i].x;
@@ -220,14 +218,12 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 		for(i = 0; i < n; i++)
 		{
 			if(i < L)
-			//if(X_y[i].x <= L)
 			{
 				Q_y[z].x = X_y[i].x;
 				Q_y[z].y = X_y[i].y;
 				z++;
 			}
 			else if(i >= L)
-			//else
 			{
 				R_y[j].x = X_y[i].x;
                                 R_y[j].y = X_y[i].y;
@@ -257,6 +253,7 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 				j++;
 			}
 		}
+		cout << "Tmin: " << minTotal << "\n";
 		float finalMin = closestCrossPair(M,minTotal,lPointCount);
 		return finalMin;
 	}
