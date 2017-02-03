@@ -9,13 +9,13 @@
 using namespace std;
 
 struct points {
-	int x;
-	int y;	
+	float x;
+	float y;	
 };
 
-int closestCrossPair(struct points* input, int minInput, int size){
-	int temp = minInput; 
-	int d;
+float closestCrossPair(struct points* input, int minInput, int size){
+	float temp = minInput; 
+	float d;
 	for(int i=0; i<size-1; i++){
 		int j = i+1;
 		while(input[j].y-input[i].y <= minInput && j<=size){
@@ -32,51 +32,49 @@ void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
 {
         int ele_num_l = med_idx - left_idx + 1;
         int ele_num_r = right_idx - med_idx;
-	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(int));
-        int temp_l[ele_num_l];
-        int temp_r[ele_num_r];
-	struct points *master = (struct points *) calloc(right_idx,sizeof(int));
+	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(struct points));
+        struct points *temp_r = (struct points *) calloc(ele_num_r,sizeof(struct points));
         for(int i = 0; i < ele_num_l; i++)
         {
-                temp_l[i] = input[left_idx + i].x;
+                temp_l[i].x = input[left_idx + i].x;
+		temp_l[i].y = input[left_idx + i].y;
         }
 
         for(int j = 0; j < ele_num_r; j++)
         {
-                temp_r[j] = input[med_idx+ 1 + j].x;
+                temp_r[j].x = input[med_idx+ 1 + j].x;
+		temp_r[j].y = input[med_idx+ 1 + j].y;
         }
         int i = 0;
         int j = 0;
         int k = left_idx;
-/*	cout << "file contents:\n";
-        for(i = 0; i < right_idx; i++)
-        {
-                cout << input[i].x << " " << input[i].y << "\n";
-        }*/
         while(i < ele_num_l && j < ele_num_r)
         {
-                if(temp_l[i] <= temp_r[j])
+                if(temp_l[i].x <= temp_r[j].x)
                 {
-                        master[k].x = temp_l[i];
-			master[k].y = input
+                        input[k].x = temp_l[i].x;
+			input[k].y = temp_l[i].y;
                         i++;
                 }
                 else
                 {
-                        master[k].x = temp_r[j];
+                        input[k].x = temp_r[j].x;
+                        input[k].y = temp_r[j].y;
                         j++;
                 }
                 k++;
         }
         while(i < ele_num_l)
         {
-                input[k].x = temp_l[i];
+                input[k].x = temp_l[i].x;
+		input[k].y = temp_l[i].y;
                 i++;
                 k++;
         }
         while(j < ele_num_r)
         {
-                input[k].x = temp_r[j];
+                input[k].x = temp_r[j].x;
+		input[k].y = temp_r[j].y;
 		j++;
                 k++;
         }
@@ -86,44 +84,49 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
 {
         int ele_num_l = med_idx - left_idx + 1;
         int ele_num_r = right_idx - med_idx;
-        int temp_l[ele_num_l];
-        int temp_r[ele_num_r];
-
+	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(struct points));
+        struct points *temp_r = (struct points *) calloc(ele_num_r,sizeof(struct points));
         for(int i = 0; i < ele_num_l; i++)
         {
-                temp_l[i] = input[left_idx + i].y;
+                temp_l[i].y = input[left_idx + i].y;
+		temp_l[i].x = input[left_idx + i].x;
         }
 
         for(int j = 0; j < ele_num_r; j++)
         {
-                temp_r[j] = input[med_idx+ 1 + j].y;
+                temp_r[j].y = input[med_idx+ 1 + j].y;
+		temp_r[j].x = input[med_idx+ 1 + j].x;
         }
         int i = 0;
         int j = 0;
         int k = left_idx;
 	while(i < ele_num_l && j < ele_num_r)
         {
-                if(temp_l[i] <= temp_r[j])
+                if(temp_l[i].y <= temp_r[j].y)
                 {
-                        input[k].y = temp_l[i];
+                        input[k].y = temp_l[i].y;
+			input[k].x = temp_l[i].x;
                         i++;
                 }
                 else
                 {
-                        input[k].y = temp_r[j];
+                        input[k].y = temp_r[j].y;
+			input[k].x = temp_r[j].x;
                         j++;
                 }
                 k++;
         }
         while(i < ele_num_l)
         {
-                input[k].y = temp_l[i];
+                input[k].y = temp_l[i].y;
+		input[k].x = temp_l[i].x;
                 i++;
                 k++;
         }
         while(j < ele_num_r)
         {
-                input[k].y = temp_r[j];
+                input[k].y = temp_r[j].y;
+		input[k].x = temp_r[j].x;
                 j++;
                 k++;
         }
@@ -133,12 +136,6 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
 void mergeSortX(struct points *input,int left_idx, int right_idx)
 {
 	int i;
-	cout << "file contents:\n";
-        for(i = 0; i < right_idx; i++)
-        {
-                cout << input[i].x << " " << input[i].y << "\n";
-        }
-
         if(left_idx < right_idx)
         {
                 int med_idx = (left_idx + right_idx)/2;
@@ -160,17 +157,15 @@ void mergeSortY(struct points *input,int left_idx, int right_idx)
         }
 }
 
-int handleBasecase(struct points *input,int n)
+float handleBasecase(struct points *input,int n)
 {
-	int temp;
+	float temp;
         if(n == 3)
         {
-		cout << input[2].x << " " << input[2].y << " " << input[0].x << " " << input[0].y << "\n";
-		int d2 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2)));
-		int d3 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2)));
-		cout << input[2].x << " " << input[2].y << " " << input[0].x << " " << input[0].y << "\n";
-               	int temp2 = min(d2, d3);
-		int d1 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
+		float d2 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2)));
+		float d3 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2)));
+               	float temp2 = min(d2, d3);
+		float d1 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
                 temp = min(temp2,d1); //min vs p1-p2
                 return temp;
         }
@@ -181,7 +176,7 @@ int handleBasecase(struct points *input,int n)
         }	
 }
 
-int closestPair(struct points *X_x,struct points *X_y,int n)
+float closestPair(struct points *X_x,struct points *X_y,int n)
 {
 	int i;
 	if(n <= 3)
@@ -200,36 +195,42 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 		int lPointCount = 0;
 		for(i = 0; i < n; i++)
 		{
-			if(X_x[i].x < L)
+			if(X_x[i].x <= L)
 			{
 				Q_x[j].x = X_x[i].x;
 				Q_x[j].y = X_x[i].y;
+				j++;
 			}
-			else if(X_x[i].x > L)
+			else
 			{
-				R_x[j].x = X_x[i].x;
-                                R_x[j].y = X_x[i].y;
+				R_x[z].x = X_x[i].x;
+                                R_x[z].y = X_x[i].y;
+				z++;
 			}
 		}
+		z = 0;
+		j = 0;
 		for(i = 0; i < n; i++)
 		{
-			if(X_y[i].x < L)
+			if(X_y[i].x <= L)
 			{
 				Q_y[z].x = X_y[i].x;
 				Q_y[z].y = X_y[i].y;
+				z++;
 			}
-			else if (X_y[i].x > L)
+			else
 			{
-				R_y[z].x = X_y[i].x;
-                                R_y[z].y = X_y[i].y;
+				R_y[j].x = X_y[i].x;
+                                R_y[j].y = X_y[i].y;
+				j++;
 			}
 		}
-		int min1 = closestPair(Q_x,Q_y,L);
-		int min2 = closestPair(R_x,R_y,L);
-		int minTotal = min(min1,min2);
+		float min1 = closestPair(Q_x,Q_y,L);
+		float min2 = closestPair(R_x,R_y,L);
+		float minTotal = min(min1,min2);
 		j=0;
-		int lowerBound = L - minTotal;
-		int upperBound = L + minTotal;
+		float lowerBound = L - minTotal;
+		float upperBound = L + minTotal;
 		for(i = 0; i < n; i++)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
@@ -237,7 +238,8 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 				lPointCount++;
 			}
 		}
-		struct points *M = (struct points *) calloc(lPointCount,sizeof(struct points));
+		cout << lPointCount << "\n";
+		struct points *M = (struct points *) malloc(lPointCount*sizeof(struct points));
 		for(i = 0;i<n; i++)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
@@ -245,9 +247,11 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 				M[j].x = X_y[i].x;
 				M[j].y = X_y[i].y;
 				j++;
+				cout << M[j].x << M[j].y << "\n";
 			}
 		}
-		int finalMin = closestCrossPair(M,minTotal,lPointCount);
+		cout << "hereGASDFA: " << minTotal << "\n";
+		float finalMin = closestCrossPair(M,minTotal,lPointCount);
 		return finalMin;
 	}
 }
@@ -262,10 +266,9 @@ int main (int argc, const char * argv[])
 		lineCount++;
 	}
 	ifstream file(argv[1]);
-//	struct points *input = (struct points *) calloc(lineCount,sizeof(struct points));
 	struct points *X_x = (struct points *) calloc(lineCount,sizeof(struct points));
         struct points *X_y = (struct points *) calloc(lineCount,sizeof(struct points));
-	int a,b;
+	float a,b;
 	int i = 0;
 	while(file >> a >> b)
 	{
@@ -276,26 +279,14 @@ int main (int argc, const char * argv[])
 		i++;
 	}
 
-/*	cout << "file contents:\n";
+	/*cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
 		cout << X_x[i].x << " " << X_x[i].y << "\n";
-	}
-*/
-
-
-
-
-	/* SORT HERE  */
-	mergeSortX(X_x, 0 ,lineCount);
-	mergeSortY(X_y, 0 ,lineCount);
-/*	cout << "file contents:\n";
-        for(i = 0; i < lineCount; i++)
-        {
-                cout << X_x[i].x << " " << X_x[i].y << "\n";
-        }
-*/
-	int min = closestPair(X_x,X_y,lineCount);
+	}*/
+	mergeSortX(X_x, 0 ,lineCount-1);
+	mergeSortY(X_y, 0 ,lineCount-1);
+	float min = closestPair(X_x,X_y,lineCount);
 	cout << "minimum distance found: " << min << "\n";
 	return 0;
 }

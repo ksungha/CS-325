@@ -69,10 +69,14 @@ int main (int argc, const char * argv[])
 			}
 		}
 	}
-	cout << minD << "\n";
+	ofstream outfile;
+	outfile.open("output.txt");
+	
+	outfile << minD << "\n";
 	for(i=0; i<=numties; i++){
-		cout << min[2*i].x << " " << min[2*i].y << " " << min[2*i+1].x << " " << min[2*i+1].y << "\n";
+		outfile << min[2*i].x << " " << min[2*i].y << " " << min[2*i+1].x << " " << min[2*i+1].y << "\n";
 	}
+	outfile.close();
 
 	return 0;
 }
