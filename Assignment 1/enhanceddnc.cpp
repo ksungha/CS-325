@@ -5,19 +5,37 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <math.h>
 using namespace std;
 
 struct points {
 	int x;
 	int y;	
 };
+
+int closestCrossPair(struct points* input, int minInput, int size){
+	int temp = minInput; 
+	int d;
+	for(int i=0; i<size-1; i++){
+		int j = i+1;
+		while(input[j].y-input[i].y <= minInput && j<=size){
+			d = sqrt(abs(pow(input[j].x-input[i].x,2)+pow(input[j].y-input[i].y,2)));
+			temp = min(d, temp);
+			j++;
+		}
+	}
+	return temp;
+}
+
+
 void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
 {
         int ele_num_l = med_idx - left_idx + 1;
         int ele_num_r = right_idx - med_idx;
+	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(int));
         int temp_l[ele_num_l];
         int temp_r[ele_num_r];
-
+	struct points *master = (struct points *) calloc(right_idx,sizeof(int));
         for(int i = 0; i < ele_num_l; i++)
         {
                 temp_l[i] = input[left_idx + i].x;
@@ -30,16 +48,22 @@ void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
         int i = 0;
         int j = 0;
         int k = left_idx;
+/*	cout << "file contents:\n";
+        for(i = 0; i < right_idx; i++)
+        {
+                cout << input[i].x << " " << input[i].y << "\n";
+        }*/
         while(i < ele_num_l && j < ele_num_r)
         {
                 if(temp_l[i] <= temp_r[j])
                 {
-                        input[k].x = temp_l[i];
+                        master[k].x = temp_l[i];
+			master[k].y = input
                         i++;
                 }
                 else
                 {
-                        input[k].x = temp_r[j];
+                        master[k].x = temp_r[j];
                         j++;
                 }
                 k++;
@@ -108,13 +132,18 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
 
 void mergeSortX(struct points *input,int left_idx, int right_idx)
 {
+	int i;
+	cout << "file contents:\n";
+        for(i = 0; i < right_idx; i++)
+        {
+                cout << input[i].x << " " << input[i].y << "\n";
+        }
+
         if(left_idx < right_idx)
         {
                 int med_idx = (left_idx + right_idx)/2;
-
                 mergeSortX(input, left_idx, med_idx);//for the first half of the inputay
                 mergeSortX(input,med_idx + 1, right_idx);//for the second
-
                 mergeX(input, left_idx, med_idx, right_idx);//merge them together
         }
 }
@@ -136,8 +165,13 @@ int handleBasecase(struct points *input,int n)
 	int temp;
         if(n == 3)
         {
-               	int temp2 = min(sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2))), sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2))));
-                temp = min(temp2,sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)))); //min vs p1-p2
+		cout << input[2].x << " " << input[2].y << " " << input[0].x << " " << input[0].y << "\n";
+		int d2 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2)));
+		int d3 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2)));
+		cout << input[2].x << " " << input[2].y << " " << input[0].x << " " << input[0].y << "\n";
+               	int temp2 = min(d2, d3);
+		int d1 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
+                temp = min(temp2,d1); //min vs p1-p2
                 return temp;
         }
         else
@@ -192,10 +226,10 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 		}
 		int min1 = closestPair(Q_x,Q_y,L);
 		int min2 = closestPair(R_x,R_y,L);
-		int min = min(min1,min2);
+		int minTotal = min(min1,min2);
 		j=0;
-		int lowerBound = L - min;
-		int upperBound = L + min;
+		int lowerBound = L - minTotal;
+		int upperBound = L + minTotal;
 		for(i = 0; i < n; i++)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
@@ -208,12 +242,12 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
 			{
-				M[j].x = input[i].x;
-				M[j].y = input[i].y;
+				M[j].x = X_y[i].x;
+				M[j].y = X_y[i].y;
 				j++;
 			}
 		}
-		int finalMin = closestCrossPair(M,min,lPointCount);
+		int finalMin = closestCrossPair(M,minTotal,lPointCount);
 		return finalMin;
 	}
 }
@@ -241,11 +275,11 @@ int main (int argc, const char * argv[])
                 X_x[i].y = b;
 		i++;
 	}
-/*
-	cout << "file contents:\n";
+
+/*	cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
-		cout << input[i].x << " " << input[i].y << "\n";
+		cout << X_x[i].x << " " << X_x[i].y << "\n";
 	}
 */
 
@@ -255,7 +289,13 @@ int main (int argc, const char * argv[])
 	/* SORT HERE  */
 	mergeSortX(X_x, 0 ,lineCount);
 	mergeSortY(X_y, 0 ,lineCount);
-	string min = closestPair(X_x,X_y,lineCount);
-
+/*	cout << "file contents:\n";
+        for(i = 0; i < lineCount; i++)
+        {
+                cout << X_x[i].x << " " << X_x[i].y << "\n";
+        }
+*/
+	int min = closestPair(X_x,X_y,lineCount);
+	cout << "minimum distance found: " << min << "\n";
 	return 0;
 }
