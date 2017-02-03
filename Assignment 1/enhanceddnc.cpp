@@ -78,6 +78,8 @@ void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
 		j++;
                 k++;
         }
+	free(temp_l);
+	free(temp_r);
 }
 
 void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
@@ -130,6 +132,8 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
                 j++;
                 k++;
         }
+	free(temp_l);
+	free(temp_r);
 }
 
 
@@ -255,6 +259,11 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 		}
 		cout << "Tmin: " << minTotal << "\n";
 		float finalMin = closestCrossPair(M,minTotal,lPointCount);
+		free(Q_x);
+		free(R_x);
+		free(Q_y);
+		free(R_y);
+		free(M);
 		return finalMin;
 	}
 }
@@ -293,5 +302,9 @@ int main (int argc, const char * argv[])
 	free(X_x);
 	free(X_y);
 	cout << "minimum distance found: " << min << "\n";
+	
+	free(X_x);
+	free(X_y);
+
 	return 0;
 }
