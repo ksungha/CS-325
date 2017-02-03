@@ -152,6 +152,7 @@ void mergeSortY(struct points *input,int left_idx, int right_idx)
 float handleBasecase(struct points *input,int n)
 {
 	float temp;
+	n++;
         if(n == 3)
         {
 		float d1 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2))), d2 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2))), d3 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
@@ -188,29 +189,37 @@ float closestPair(struct points *input,int n)
 	}
 	else
 	{
-		float L = input[n/2].x;
-		struct points *left = (struct points *) calloc(L,sizeof(struct points));
+		int L = n/2, M;
+		M = n%2;
+		if(M==1)
+			M=L+1;
+		else{
+			M=L;
+		}
+		float l = input[n/2].x;
+		struct points *left = (struct points *) calloc(M,sizeof(struct points));
 		struct points *right = (struct points *) calloc(L,sizeof(struct points));
-		int j = 0;
+		int j = 0, k = 0;
 		int z = 0;
 		int lPointCount = 0;
 		for(i = 0; i < n; i++)
 		{
-			if(input[i].x < L)
+			if(i < L)
 			{
-				left[j].x = input[n].x;
-				left[j].y = input[n].y;
+				left[j].x = input[i].x;
+				left[j].y = input[i].y;
+				j++;
 			}
-			else if(input[i].x > L)
+			else if(i >= L)
 			{
-				right[j].x = input[n].x;
-                                right[j].y = input[n].y;
+				right[k].x = input[i].x;
+                                right[k].y = input[i].y;
+				k++;
 			}
 		}
-		float min1 = closestPair(left,L);
+		float min1 = closestPair(left,M);
 		float min2 = closestPair(right,L);
 		float minf = min(min1,min2);
-		cout << "Current min: " << minf << endl;
 		float lowerBound = L - minf;
 		float upperBound = L - minf;
 		for(i=0; i<n; i++)
@@ -219,12 +228,13 @@ float closestPair(struct points *input,int n)
 				lPointCount++;
 		}
 		struct points *mid = (struct points *) calloc(lPointCount,sizeof(struct points));
+		j = 0;
 		for(i = 0;i<n; i++)
 		{
 			if(input[i].x <= upperBound and input[i].x >= lowerBound)
 			{
 				mid[j].x = input[i].x;
-				mid[j].y = input[i].y;
+			 	mid[j].y = input[i].y;
 				j++;
 			}
 		}
@@ -244,6 +254,7 @@ int main (int argc, const char * argv[])
 		lineCount++;
 	}
 	ifstream file(argv[1]);
+	cout << "before calloc\n";
 	struct points *input = (struct points *) calloc(lineCount,sizeof(struct points));
 	float a,b;
 	int i = 0;
@@ -254,25 +265,27 @@ int main (int argc, const char * argv[])
 		i++;
 	}
 
-	cout << "file contents:\n";
+/*	cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
 		cout << input[i].x << " " << input[i].y << "\n";
 	}
-
+*/
 
 
 
 
 	/* SORT HERE  */
+	cout << "before mergesort\n";
 	mergeSortX(input,0,lineCount-1);
-	cout << "file contents:\n";
+/*	cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
 		cout << input[i].x << " " << input[i].y << "\n";
-	}
+	}*/
+	cout << "before closestPair\n";
 	float minf = closestPair(input,lineCount);
-	cout << minf << endl;
+	cout << "min distance: " << minf << endl;
 
 	return 0;
 }
