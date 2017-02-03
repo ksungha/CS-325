@@ -68,6 +68,8 @@ void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
 	for(int z=0; z<right_idx; z++){
 		cout << input[z].x << " " << input[z].y << endl;
 	}*/
+	free(temp_l);
+	free(temp_r);
 }
 
 void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
@@ -121,6 +123,8 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
                 j++;
                 k++;
         }
+	free(temp_l);
+	free(temp_r);
 }
 
 
@@ -240,6 +244,9 @@ float closestPair(struct points *input,int n)
 		}
 		mergeSortY(mid,0,j-1);
 		float finalMin = closestCrossPair(mid,minf,lPointCount);
+		free(left);
+		free(right);
+		free(mid);
 		return finalMin;
 	}
 }
@@ -254,7 +261,6 @@ int main (int argc, const char * argv[])
 		lineCount++;
 	}
 	ifstream file(argv[1]);
-	cout << "before calloc\n";
 	struct points *input = (struct points *) calloc(lineCount,sizeof(struct points));
 	float a,b;
 	int i = 0;
@@ -276,16 +282,20 @@ int main (int argc, const char * argv[])
 
 
 	/* SORT HERE  */
-	cout << "before mergesort\n";
 	mergeSortX(input,0,lineCount-1);
 /*	cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
 		cout << input[i].x << " " << input[i].y << "\n";
 	}*/
-	cout << "before closestPair\n";
 	float minf = closestPair(input,lineCount);
-	cout << "min distance: " << minf << endl;
+
+	ofstream outfile;
+	outfile.open("output.txt");
+
+	outfile << minf << endl;
+
+	free(input);
 
 	return 0;
 }
