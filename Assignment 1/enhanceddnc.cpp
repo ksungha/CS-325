@@ -32,51 +32,49 @@ void mergeX(struct points *input, int left_idx, int med_idx, int right_idx)
 {
         int ele_num_l = med_idx - left_idx + 1;
         int ele_num_r = right_idx - med_idx;
-	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(int));
-        int temp_l[ele_num_l];
-        int temp_r[ele_num_r];
-	struct points *master = (struct points *) calloc(right_idx,sizeof(int));
+	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(struct points));
+        struct points *temp_r = (struct points *) calloc(ele_num_r,sizeof(struct points));
         for(int i = 0; i < ele_num_l; i++)
         {
-                temp_l[i] = input[left_idx + i].x;
+                temp_l[i].x = input[left_idx + i].x;
+		temp_l[i].y = input[left_idx + i].y;
         }
 
         for(int j = 0; j < ele_num_r; j++)
         {
-                temp_r[j] = input[med_idx+ 1 + j].x;
+                temp_r[j].x = input[med_idx+ 1 + j].x;
+		temp_r[j].y = input[med_idx+ 1 + j].y;
         }
         int i = 0;
         int j = 0;
         int k = left_idx;
-/*	cout << "file contents:\n";
-        for(i = 0; i < right_idx; i++)
-        {
-                cout << input[i].x << " " << input[i].y << "\n";
-        }*/
         while(i < ele_num_l && j < ele_num_r)
         {
-                if(temp_l[i] <= temp_r[j])
+                if(temp_l[i].x <= temp_r[j].x)
                 {
-                        master[k].x = temp_l[i];
-			master[k].y = input
+                        input[k].x = temp_l[i].x;
+			input[k].y = temp_l[i].y;
                         i++;
                 }
                 else
                 {
-                        master[k].x = temp_r[j];
+                        input[k].x = temp_r[j].x;
+                        input[k].y = temp_r[j].y;
                         j++;
                 }
                 k++;
         }
         while(i < ele_num_l)
         {
-                input[k].x = temp_l[i];
+                input[k].x = temp_l[i].x;
+		input[k].y = temp_l[i].y;
                 i++;
                 k++;
         }
         while(j < ele_num_r)
         {
-                input[k].x = temp_r[j];
+                input[k].x = temp_r[j].x;
+		input[k].y = temp_r[j].y;
 		j++;
                 k++;
         }
@@ -86,44 +84,49 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
 {
         int ele_num_l = med_idx - left_idx + 1;
         int ele_num_r = right_idx - med_idx;
-        int temp_l[ele_num_l];
-        int temp_r[ele_num_r];
-
+	struct points *temp_l = (struct points *) calloc(ele_num_l,sizeof(struct points));
+        struct points *temp_r = (struct points *) calloc(ele_num_r,sizeof(struct points));
         for(int i = 0; i < ele_num_l; i++)
         {
-                temp_l[i] = input[left_idx + i].y;
+                temp_l[i].y = input[left_idx + i].y;
+		temp_l[i].x = input[left_idx + i].x;
         }
 
         for(int j = 0; j < ele_num_r; j++)
         {
-                temp_r[j] = input[med_idx+ 1 + j].y;
+                temp_r[j].y = input[med_idx+ 1 + j].y;
+		temp_r[j].x = input[med_idx+ 1 + j].x;
         }
         int i = 0;
         int j = 0;
         int k = left_idx;
 	while(i < ele_num_l && j < ele_num_r)
         {
-                if(temp_l[i] <= temp_r[j])
+                if(temp_l[i].y <= temp_r[j].y)
                 {
-                        input[k].y = temp_l[i];
+                        input[k].y = temp_l[i].y;
+			input[k].x = temp_l[i].x;
                         i++;
                 }
                 else
                 {
-                        input[k].y = temp_r[j];
+                        input[k].y = temp_r[j].y;
+			input[k].x = temp_r[j].x;
                         j++;
                 }
                 k++;
         }
         while(i < ele_num_l)
         {
-                input[k].y = temp_l[i];
+                input[k].y = temp_l[i].y;
+		input[k].x = temp_l[i].x;
                 i++;
                 k++;
         }
         while(j < ele_num_r)
         {
-                input[k].y = temp_r[j];
+                input[k].y = temp_r[j].y;
+		input[k].x = temp_r[j].x;
                 j++;
                 k++;
         }
@@ -133,12 +136,6 @@ void mergeY(struct points *input, int left_idx, int med_idx, int right_idx)
 void mergeSortX(struct points *input,int left_idx, int right_idx)
 {
 	int i;
-	cout << "file contents:\n";
-        for(i = 0; i < right_idx; i++)
-        {
-                cout << input[i].x << " " << input[i].y << "\n";
-        }
-
         if(left_idx < right_idx)
         {
                 int med_idx = (left_idx + right_idx)/2;
@@ -262,7 +259,6 @@ int main (int argc, const char * argv[])
 		lineCount++;
 	}
 	ifstream file(argv[1]);
-//	struct points *input = (struct points *) calloc(lineCount,sizeof(struct points));
 	struct points *X_x = (struct points *) calloc(lineCount,sizeof(struct points));
         struct points *X_y = (struct points *) calloc(lineCount,sizeof(struct points));
 	int a,b;
@@ -276,25 +272,25 @@ int main (int argc, const char * argv[])
 		i++;
 	}
 
-/*	cout << "file contents:\n";
+	cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
 		cout << X_x[i].x << " " << X_x[i].y << "\n";
 	}
-*/
 
 
+	//lineCount--;
 
 
 	/* SORT HERE  */
-	mergeSortX(X_x, 0 ,lineCount);
-	mergeSortY(X_y, 0 ,lineCount);
-/*	cout << "file contents:\n";
+	mergeSortX(X_x, 0 ,lineCount-1);
+	mergeSortY(X_y, 0 ,lineCount-1);
+	cout << "file contents:\n";
         for(i = 0; i < lineCount; i++)
         {
                 cout << X_x[i].x << " " << X_x[i].y << "\n";
         }
-*/
+
 	int min = closestPair(X_x,X_y,lineCount);
 	cout << "minimum distance found: " << min << "\n";
 	return 0;
