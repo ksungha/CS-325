@@ -185,7 +185,7 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 	}
 	else
 	{
-		float L = n/2;
+		int L = n/2;
 		struct points *Q_x = (struct points *) calloc(L,sizeof(struct points));
 		struct points *R_x = (struct points *) calloc(L,sizeof(struct points));
 		struct points *Q_y = (struct points *) calloc(L,sizeof(struct points));
@@ -195,28 +195,34 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 		int lPointCount = 0;
 		for(i = 0; i < n; i++)
 		{
-			if(X_x[i].x < L)
+			if(X_x[i].x <= L)
 			{
 				Q_x[j].x = X_x[i].x;
 				Q_x[j].y = X_x[i].y;
+				j++;
 			}
-			else if(X_x[i].x > L)
+			else
 			{
-				R_x[j].x = X_x[i].x;
-                                R_x[j].y = X_x[i].y;
+				R_x[z].x = X_x[i].x;
+                                R_x[z].y = X_x[i].y;
+				z++;
 			}
 		}
+		z = 0;
+		j = 0;
 		for(i = 0; i < n; i++)
 		{
-			if(X_y[i].x < L)
+			if(X_y[i].x <= L)
 			{
 				Q_y[z].x = X_y[i].x;
 				Q_y[z].y = X_y[i].y;
+				z++;
 			}
-			else if (X_y[i].x > L)
+			else
 			{
-				R_y[z].x = X_y[i].x;
-                                R_y[z].y = X_y[i].y;
+				R_y[j].x = X_y[i].x;
+                                R_y[j].y = X_y[i].y;
+				j++;
 			}
 		}
 		float min1 = closestPair(Q_x,Q_y,L);
@@ -232,7 +238,8 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 				lPointCount++;
 			}
 		}
-		struct points *M = (struct points *) calloc(lPointCount,sizeof(struct points));
+		cout << lPointCount << "\n";
+		struct points *M = (struct points *) malloc(lPointCount*sizeof(struct points));
 		for(i = 0;i<n; i++)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
@@ -240,8 +247,10 @@ float closestPair(struct points *X_x,struct points *X_y,int n)
 				M[j].x = X_y[i].x;
 				M[j].y = X_y[i].y;
 				j++;
+				cout << M[j].x << M[j].y << "\n";
 			}
 		}
+		cout << "hereGASDFA: " << minTotal << "\n";
 		float finalMin = closestCrossPair(M,minTotal,lPointCount);
 		return finalMin;
 	}
@@ -270,25 +279,13 @@ int main (int argc, const char * argv[])
 		i++;
 	}
 
-	cout << "file contents:\n";
+	/*cout << "file contents:\n";
 	for(i = 0; i < lineCount; i++)
 	{
 		cout << X_x[i].x << " " << X_x[i].y << "\n";
-	}
-
-
-	//lineCount--;
-
-
-	/* SORT HERE  */
+	}*/
 	mergeSortX(X_x, 0 ,lineCount-1);
 	mergeSortY(X_y, 0 ,lineCount-1);
-	cout << "file contents:\n";
-        for(i = 0; i < lineCount; i++)
-        {
-                cout << X_x[i].x << " " << X_x[i].y << "\n";
-        }
-
 	float min = closestPair(X_x,X_y,lineCount);
 	cout << "minimum distance found: " << min << "\n";
 	return 0;
