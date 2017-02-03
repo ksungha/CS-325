@@ -9,13 +9,13 @@
 using namespace std;
 
 struct points {
-	int x;
-	int y;	
+	float x;
+	float y;	
 };
 
-int closestCrossPair(struct points* input, int minInput, int size){
-	int temp = minInput; 
-	int d;
+float closestCrossPair(struct points* input, int minInput, int size){
+	float temp = minInput; 
+	float d;
 	for(int i=0; i<size-1; i++){
 		int j = i+1;
 		while(input[j].y-input[i].y <= minInput && j<=size){
@@ -157,17 +157,15 @@ void mergeSortY(struct points *input,int left_idx, int right_idx)
         }
 }
 
-int handleBasecase(struct points *input,int n)
+float handleBasecase(struct points *input,int n)
 {
-	int temp;
+	float temp;
         if(n == 3)
         {
-		cout << input[2].x << " " << input[2].y << " " << input[0].x << " " << input[0].y << "\n";
-		int d2 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2)));
-		int d3 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2)));
-		cout << input[2].x << " " << input[2].y << " " << input[0].x << " " << input[0].y << "\n";
-               	int temp2 = min(d2, d3);
-		int d1 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
+		float d2 = sqrt(abs(pow(input[2].x-input[1].x,2)+pow(input[2].y-input[1].y,2)));
+		float d3 = sqrt(abs(pow(input[2].x-input[0].x,2)+pow(input[2].y-input[0].y,2)));
+               	float temp2 = min(d2, d3);
+		float d1 = sqrt(abs(pow(input[1].x-input[0].x,2)+pow(input[1].y-input[0].y,2)));
                 temp = min(temp2,d1); //min vs p1-p2
                 return temp;
         }
@@ -178,7 +176,7 @@ int handleBasecase(struct points *input,int n)
         }	
 }
 
-int closestPair(struct points *X_x,struct points *X_y,int n)
+float closestPair(struct points *X_x,struct points *X_y,int n)
 {
 	int i;
 	if(n <= 3)
@@ -187,7 +185,7 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 	}
 	else
 	{
-		int L = n/2;
+		float L = n/2;
 		struct points *Q_x = (struct points *) calloc(L,sizeof(struct points));
 		struct points *R_x = (struct points *) calloc(L,sizeof(struct points));
 		struct points *Q_y = (struct points *) calloc(L,sizeof(struct points));
@@ -221,12 +219,12 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
                                 R_y[z].y = X_y[i].y;
 			}
 		}
-		int min1 = closestPair(Q_x,Q_y,L);
-		int min2 = closestPair(R_x,R_y,L);
-		int minTotal = min(min1,min2);
+		float min1 = closestPair(Q_x,Q_y,L);
+		float min2 = closestPair(R_x,R_y,L);
+		float minTotal = min(min1,min2);
 		j=0;
-		int lowerBound = L - minTotal;
-		int upperBound = L + minTotal;
+		float lowerBound = L - minTotal;
+		float upperBound = L + minTotal;
 		for(i = 0; i < n; i++)
 		{
 			if(X_y[i].x <= upperBound and X_y[i].x >= lowerBound)
@@ -244,7 +242,7 @@ int closestPair(struct points *X_x,struct points *X_y,int n)
 				j++;
 			}
 		}
-		int finalMin = closestCrossPair(M,minTotal,lPointCount);
+		float finalMin = closestCrossPair(M,minTotal,lPointCount);
 		return finalMin;
 	}
 }
@@ -261,7 +259,7 @@ int main (int argc, const char * argv[])
 	ifstream file(argv[1]);
 	struct points *X_x = (struct points *) calloc(lineCount,sizeof(struct points));
         struct points *X_y = (struct points *) calloc(lineCount,sizeof(struct points));
-	int a,b;
+	float a,b;
 	int i = 0;
 	while(file >> a >> b)
 	{
@@ -291,7 +289,7 @@ int main (int argc, const char * argv[])
                 cout << X_x[i].x << " " << X_x[i].y << "\n";
         }
 
-	int min = closestPair(X_x,X_y,lineCount);
+	float min = closestPair(X_x,X_y,lineCount);
 	cout << "minimum distance found: " << min << "\n";
 	return 0;
 }
