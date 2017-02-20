@@ -117,8 +117,8 @@ def main(argv):
 	
 	#ALGORITHM HERE
 	seq = 0 #count for seqLengths, incremented with x but by 2
-	for x in data:
-		D = [[0 for h in range(seqLengths[seq+1])]for g in range(seqLengths[seq])]
+	for x in range(len(data)):
+		D = [[0 for h in range(seqLengths[seq+1])] for g in range(seqLengths[seq])]
 		for i in range(seqLengths[seq]):
 			D[i][0] = i
 		for j in range(seqLengths[seq+1]):
