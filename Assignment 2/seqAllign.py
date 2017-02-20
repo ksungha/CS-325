@@ -95,7 +95,7 @@ def main(argv):
                 f = open(inputMatrixFile,'r')
         else:
                 sys.exit(2)
-	costStruct = collections.namedtuple('costStruct',['dash','a','t','g','c'])
+	costStruct = collections.namedtuple('costStruct',['dash','A','T','G','C'])
 	costMatrix = []
 	i = 0
 	for line in f:
