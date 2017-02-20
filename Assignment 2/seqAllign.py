@@ -55,7 +55,10 @@ def main(argv):
 	
 
 	#ALGORITHM HERE
-
+	for x in data:
+		for i in data[x].left:
+			for j in data[x].right:
+				
 
 
 if __name__ == "__main__":
