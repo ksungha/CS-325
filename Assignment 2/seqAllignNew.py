@@ -71,22 +71,22 @@ def costAlign(str1, str2, costMatrix, n, m):
 ###Edit Distance - takes 2 strings and costMatrix, returns minimum edit distance
 
 def editDistance(str1, str2, costMatrix):
-	m = len(str1)
-	n = len(str2)
+	m = len(str1)-1
+	n = len(str2)-1
 
 	print str1,'\n',str2
-	print m,'\n',n
+	#print m,'\n',n
 	tbl = {}
 	tbl[0, 0] = 0
 	for i in range(1, m): tbl[i, 0] = tbl[i-1, 0] + int(costDelete(str1, costMatrix, i))
-	for j in range(1, n-1): tbl[0, j] = tbl[0, j-1] + int(costInsert(str2, costMatrix, j))
+	for j in range(1, n): tbl[0, j] = tbl[0, j-1] + int(costInsert(str2, costMatrix, j))
 	for i in range(1, m):
-		for j in range(1, n-1):
+		for j in range(1, n):
 			val1 = tbl[i-1, j] + int(costDelete(str1, costMatrix, i))
 			val2 = tbl[i, j-1] + int(costInsert(str2, costMatrix, j))
 			val3 = tbl[i-1, j-1] + int(costAlign(str1, str2, costMatrix, i, j))
 			tbl[i, j] = min(val1, val2, val3)
-	print i,'\n',j
+	#print i,'\n',j
 	return tbl[i, j]
 	
 
