@@ -88,10 +88,12 @@ def editDistance(str1, str2, costMatrix):
 			val2 = tbl[i, j-1] + int(costInsert(str2, costMatrix, j-1))
 			val3 = tbl[i-1, j-1] + int(costAlign(str1, str2, costMatrix, i-1, j-1))
 			tbl[i, j] = min(val1, val2, val3)
-			if(val1 < val2 and val1 < val3):
-                                bt[i,j] = "D"
-                        elif(val2 < val1 and val2 < val3):
+
+
+			if(tbl[i, j] == val2):
                                 bt[i,j] = "I"
+			elif(tbl[i, j] == val1):
+                                bt[i,j] = "D"
                         else:
                                 bt[i,j] = "A"
 			#print tbl[i, j],
@@ -99,7 +101,7 @@ def editDistance(str1, str2, costMatrix):
 	#print i,'\n',j
 	#print str1[i], str2[j]
 	#print tbl[i-1, j], tbl[i, j-1], tbl[i-1, j-1]
-	return tbl[i, j]
+	return tbl[i, j], bt
 	
 
 ##############MAIN##################
@@ -148,12 +150,41 @@ def main(argv):
 		sys.exit(2)
 	seqLengths = []
 	for line in f:
+		minseq = ''
+		tracestr = ''
+		bt = {}
 		line.rstrip()
 		temp = line.split(',')
 		seq1 = temp[0]
 		seq2 = temp[1]
-		print editDistance(seq1, seq2, costMatrix)
-		#break
+		med, bt = editDistance(seq1, seq2, costMatrix)
+		m = len(seq1)-1
+		n = len(seq2)-1
+		while(m >= 0):
+			if(bt[m, n] == 'I'):
+				n -= 1
+				tracestr = 'I' + tracestr
+			elif(bt[m, n] == 'D'):
+				m -= 1
+				tracestr = 'D' + tracestr
+			else:
+				m -= 1
+				n -= 1
+				tracestr = 'A' + tracestr
+		j = 0
+		for i in range(len(tracestr)):
+			if(tracestr[i] == 'I'):
+				minseq = minseq + '-'
+			elif(tracestr[i] == 'D'):
+				minseq = minseq + seq1[j]
+				j += 1
+			else:
+				minseq = minseq + seq1[j]
+				j += 1
+			
+		print minseq
+		print tracestr
+		break
 	f.close()
 	
 
