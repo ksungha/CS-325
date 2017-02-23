@@ -78,6 +78,8 @@ def editDistance(str1, str2, costMatrix):
 	#print m,'\n',n
 	tbl = {}
 	tbl[0, 0] = 0
+	bt = {}
+        bt[0,0] = 0
 	for i in range(1, m+1): tbl[i, 0] = tbl[i-1, 0] + int(costDelete(str1, costMatrix, i-1))
 	for j in range(1, n): tbl[0, j] = tbl[0, j-1] + int(costInsert(str2, costMatrix, j-1))
 	for i in range(1, m+1):
@@ -86,6 +88,12 @@ def editDistance(str1, str2, costMatrix):
 			val2 = tbl[i, j-1] + int(costInsert(str2, costMatrix, j-1))
 			val3 = tbl[i-1, j-1] + int(costAlign(str1, str2, costMatrix, i-1, j-1))
 			tbl[i, j] = min(val1, val2, val3)
+			if(val1 < val2 and val1 < val3):
+                                bt[i,j] = "D"
+                        elif(val2 < val1 and val2 < val3):
+                                bt[i,j] = "I"
+                        else:
+                                bt[i,j] = "A"
 			#print tbl[i, j],
 		#print '\n'
 	#print i,'\n',j
