@@ -71,22 +71,26 @@ def costAlign(str1, str2, costMatrix, n, m):
 ###Edit Distance - takes 2 strings and costMatrix, returns minimum edit distance
 
 def editDistance(str1, str2, costMatrix):
-	m = len(str1)-1
-	n = len(str2)-1
+	m = len(str1)
+	n = len(str2)
 
 	print str1,'\n',str2
 	#print m,'\n',n
 	tbl = {}
 	tbl[0, 0] = 0
-	for i in range(1, m): tbl[i, 0] = tbl[i-1, 0] + int(costDelete(str1, costMatrix, i))
-	for j in range(1, n): tbl[0, j] = tbl[0, j-1] + int(costInsert(str2, costMatrix, j))
-	for i in range(1, m):
+	for i in range(1, m+1): tbl[i, 0] = tbl[i-1, 0] + int(costDelete(str1, costMatrix, i-1))
+	for j in range(1, n): tbl[0, j] = tbl[0, j-1] + int(costInsert(str2, costMatrix, j-1))
+	for i in range(1, m+1):
 		for j in range(1, n):
-			val1 = tbl[i-1, j] + int(costDelete(str1, costMatrix, i))
-			val2 = tbl[i, j-1] + int(costInsert(str2, costMatrix, j))
-			val3 = tbl[i-1, j-1] + int(costAlign(str1, str2, costMatrix, i, j))
+			val1 = tbl[i-1, j] + int(costDelete(str1, costMatrix, i-1))
+			val2 = tbl[i, j-1] + int(costInsert(str2, costMatrix, j-1))
+			val3 = tbl[i-1, j-1] + int(costAlign(str1, str2, costMatrix, i-1, j-1))
 			tbl[i, j] = min(val1, val2, val3)
+			#print tbl[i, j],
+		#print '\n'
 	#print i,'\n',j
+	#print str1[i], str2[j]
+	#print tbl[i-1, j], tbl[i, j-1], tbl[i-1, j-1]
 	return tbl[i, j]
 	
 
@@ -136,11 +140,12 @@ def main(argv):
 		sys.exit(2)
 	seqLengths = []
 	for line in f:
-		line.strip()
+		line.rstrip()
 		temp = line.split(',')
 		seq1 = temp[0]
 		seq2 = temp[1]
 		print editDistance(seq1, seq2, costMatrix)
+		#break
 	f.close()
 	
 
