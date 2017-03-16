@@ -5,10 +5,7 @@ matplotlib.use("qt4agg")
 import matplotlib.pyplot as pPlot
 import math
 
-#####
-##Read in OregonCityNew.csv file and convert it into a table
-#####
-weatherDF = panda.read_table("OregonCityNew.csv", sep=",")
+weatherDF = panda.read_table("OregonCityNew.csv", sep=",") #CHANGE THIS 
 weatherDF.drop('STATION', axis=1, inplace=True)
 panda.DataFrame(weatherDF)
 x_vals = weatherDF['DAY'].tolist()
