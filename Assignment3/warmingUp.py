@@ -27,14 +27,14 @@ x5 = LpVariable("x5")
 Td = LpVariable("Tdvar")
 prob += Td
 lin=0
-seas=0
-sol=0
+seasonal=0
+solar=0
 for i in range(0,n):
 	lin = (x0 + x1 * x_vals[i])
-	seas = (x2 * math.cos(2*math.pi * x_vals[i]/364.25) + x3 * math.sin(2*math.pi * x_vals[i]/364.25))
-	sol = (x4 * math.cos(2*math.pi * x_vals[i]/(364.25*10.7)) + x5 * math.sin(2*math.pi*x_vals[i]/(364.25 * 10.7)))
-	prob += Td >= (lin + seas + sol - y_vals[i])
-	prob += Td >= -(lin + seas + sol - y_vals[i])
+	seasonal = (x2 * math.cos(2*math.pi * x_vals[i]/364.25) + x3 * math.sin(2*math.pi * x_vals[i]/364.25))
+	solar = (x4 * math.cos(2*math.pi * x_vals[i]/(364.25*10.7)) + x5 * math.sin(2*math.pi*x_vals[i]/(364.25 * 10.7)))
+	prob += Td >= (lin + seasonal + solar - y_vals[i])
+	prob += Td >= -(lin + seasonal + solar - y_vals[i])
 status = prob.solve()
 print "\n\nObjective of LP:%f" %(value(prob.objective))
 print "Value of x0:%f" %(value(x0))
