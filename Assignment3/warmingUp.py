@@ -51,6 +51,6 @@ linear = []
 for i in range(n):
 	linear.append(value(x0) + value(x1)*x_vals[i])
 
-pPl0t.plot(x_vals,y_vals, "bo", x_vals, bestFit, "r", x_vals, linear, "y", linewidth=5.0)
-pPl0t.axis([0,n,min_temp,max_temp])
+pPlot.plot(x_vals,y_vals, "bo", x_vals, bestFit, "r", x_vals, linear, "y", linewidth=5.0)
+pPlot.axis([0,n,min_temp,max_temp])
 pPlot.show()
